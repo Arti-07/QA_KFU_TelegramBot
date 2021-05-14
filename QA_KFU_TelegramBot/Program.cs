@@ -44,7 +44,7 @@ namespace QA_KFU_TelegramBot
 
         }
 
-        private static async void BotOnCallbackQueryRecieved(object sender, CallbackQueryEventArgs e)
+        private static void BotOnCallbackQueryRecieved(object sender, CallbackQueryEventArgs e)
         {
             string buttonText = e.CallbackQuery.Data;
             string name = $"{e.CallbackQuery.From.FirstName} {e.CallbackQuery.From.LastName}";
@@ -88,7 +88,7 @@ namespace QA_KFU_TelegramBot
                             new[]
                             {
                                 new KeyboardButton("\U0001F4C3 FAQ \U0001F4C3"),
-                                new KeyboardButton("\U0001F3AE Справка \U0001F3AE")
+                                new KeyboardButton("Справка")
                             },
                             new []
                             {
@@ -116,36 +116,68 @@ namespace QA_KFU_TelegramBot
                             },
                             new[]
                             {
-                                InlineKeyboardButton.WithCallbackData("FAQ","questions"),
-                                InlineKeyboardButton.WithCallbackData("КАКОЙ-то вопрос","Authors")
+                                InlineKeyboardButton.WithCallbackData("Что-то написано","questions"),
+                                InlineKeyboardButton.WithCallbackData("Что-то напсиано","Authors")
                             },
                             
 
                         new []
                         {
-                            InlineKeyboardButton.WithCallbackData("Узнать погоду","Weather"),
-                            InlineKeyboardButton.WithCallbackData("Пустая кнопка, пока...", "weater")
+                            InlineKeyboardButton.WithCallbackData("Что-то написано","Weather"),
+                            InlineKeyboardButton.WithCallbackData("Что-то написано", "weater")
                         }
                     });
                     await bot.SendTextMessageAsync(message.From.Id, $"Выберите пункт меню {1F} :", replyMarkup: inlineKeyboard);
                     break;
 
-                    bot.OnCallbackQuery += (object sender, CallbackQueryEventArgs e) =>
-                    {
-                        var message = e.CallbackQuery.Message;
-                        if (e.CallbackQuery.Data == "FAQ")
+                case "Справка":
+                    var Keyboard_Note = new InlineKeyboardMarkup(new[]{
+                        new []
                         {
-                            
-                        }
-                        else
+                           InlineKeyboardButton.WithUrl("Автор","https://t.me/ar_gin"),
+                        },
+                        new[]
                         {
-
+                                InlineKeyboardButton.WithUrl("Автор","https://t.me/auter1"),
+                        },
+                        new []
+                        {
+                            InlineKeyboardButton.WithUrl("Автор","https://t.me/ROwaGO")
+                        },
+                        new []
+                        {
+                           InlineKeyboardButton.WithCallbackData("О функциях бота","ab")
                         }
 
-                    };
+
+                    });
+                    await bot.SendTextMessageAsync(message.From.Id, $"Выберите пункт 'Справки' {1F} :", replyMarkup: Keyboard_Note);
+                    break;
+
+                case "Календарь событий":
+                    string mes = "Ой, пока запланированных событий нет \U0001F61E";
+                    await bot.SendTextMessageAsync(message.From.Id, mes, ParseMode.Html, false, false, 0);
+                    break;
+
+            }
 
 
-        }
+            bot.OnCallbackQuery += (object sender, CallbackQueryEventArgs e) =>
+            {
+                var message = e.CallbackQuery.Message;
+                if (e.CallbackQuery.Data == "ab")
+                {
+                    string mmess = " Данный бот помогает абитуриенту разобраться с вопросами," +
+                    " которые могут возникнуть при поступлении. А также" +
+                    " поможет студентам в поиске нужной информации";
+                     bot.SendTextMessageAsync(message.From.Id, mmess);
+                }
+                else
+                {
+
+                }
+
+            };
         }
     }
 }
