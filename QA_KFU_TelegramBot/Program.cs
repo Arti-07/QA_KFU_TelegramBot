@@ -166,18 +166,17 @@ namespace QA_KFU_TelegramBot
                             new[]
                             {
                                 new KeyboardButton("\U0001F4CB FAQ \U0001F4AC"),
-                                new KeyboardButton("Справка")
+                                new KeyboardButton(" Календарь событий \U0001F4C5 ")
                             },
                             new []
                             {
-                                new KeyboardButton("\U0001F4C5 Календарь событий \U0001F4C5"),
-                                new KeyboardButton("Если не нашёл(а) свой вопрос в FAQ")
+                                new KeyboardButton("\U0001F4BB Кафедры \U0001F393"),
+                                new KeyboardButton("Администрация \U0001F5C4")
                             },
                             new[]
                             {
-                                new KeyboardButton("\U0001F4BB Кафедры \U0001F393")
-                                new KeyboardButton("Кафедры"),
-                                new KeyboardButton("Администрация")
+                                new KeyboardButton("Если не нашёл(а) свой вопрос в FAQ"),
+                                new KeyboardButton("Справка \U0001F4CC")
                             },
                         }
                     };
@@ -188,33 +187,33 @@ namespace QA_KFU_TelegramBot
                     {
                         new []
                         {
-                            InlineKeyboardButton.WithCallbackData("КАКОЙ-то вопрос","Authors"),
-                            InlineKeyboardButton.WithCallbackData("FAQ","questions")
+                            InlineKeyboardButton.WithCallbackData("Заселение","dormitory"),
+                            InlineKeyboardButton.WithCallbackData("Как добраться ?","howToGetThere")
                         },
                             new[]
                             {
-                                InlineKeyboardButton.WithCallbackData("КАКОЙ-то вопрос","Authors"),
-                                InlineKeyboardButton.WithCallbackData("FAQ","questions")
+                                InlineKeyboardButton.WithCallbackData("Документы","documents"),
+                                InlineKeyboardButton.WithCallbackData("Деканат","dean office")
                                
                                
                             },
                             new[]
                             {
-                                InlineKeyboardButton.WithCallbackData("Что-то написано","questions"),
-                                InlineKeyboardButton.WithCallbackData("Что-то напсиано","Authors")
+                                InlineKeyboardButton.WithCallbackData("Расписание","schedule"),
+                                InlineKeyboardButton.WithCallbackData("Где покушать ?","whereEat")
                             },
                             
 
                         new []
                         {
-                            InlineKeyboardButton.WithCallbackData("Что-то написано","Weather"),
-                            InlineKeyboardButton.WithCallbackData("Что-то написано", "weater")
+                            InlineKeyboardButton.WithCallbackData("Студенческий совет","studentSov"),
+                            InlineKeyboardButton.WithCallbackData("Устройство двойки", "two")
                         }
                     });
-                    await bot.SendTextMessageAsync(message.From.Id, $"Выберите пункт меню {1F} :", replyMarkup: inlineKeyboard);
+                    await bot.SendTextMessageAsync(message.From.Id, $"Выбери интересующий тебя вопрос : ", replyMarkup: inlineKeyboard);
                     break;
 
-                case "Справка":
+                case "Справка \U0001F4CC":
                     var Keyboard_Note = new InlineKeyboardMarkup(new[]{
                         new []
                         {
@@ -235,16 +234,16 @@ namespace QA_KFU_TelegramBot
 
 
                     });
-                    await bot.SendTextMessageAsync(message.From.Id, $"Выберите пункт 'Справки' {1F} :", replyMarkup: Keyboard_Note);
+                    await bot.SendTextMessageAsync(message.From.Id, $"Справка : ", replyMarkup: Keyboard_Note);
                     break;
 
-                case "\U0001F4C5 Календарь событий \U0001F4C5":
+                case "Календарь событий \U0001F4C5":
                     string mes = "Ой, пока запланированных событий нет \U0001F61E";
                     await bot.SendTextMessageAsync(message.From.Id, mes, ParseMode.Html, false, false, 0);
                     break;
 
 
-                case "Кафедры":
+                case "\U0001F4BB Кафедры \U0001F393":
                     var Keyboard_Department = new InlineKeyboardMarkup(new[]{
                         new []
                         {
@@ -276,9 +275,9 @@ namespace QA_KFU_TelegramBot
                         },
                         
                     });
-                    await bot.SendTextMessageAsync(message.From.Id, $"Выберите пункт 'Кафедра' {1F} :", replyMarkup: Keyboard_Department);
+                    await bot.SendTextMessageAsync(message.From.Id, $"Выбери кафедру, о которой ты хочешь узнать : ", replyMarkup: Keyboard_Department);
                     break;
-                case "Администрация":
+                case "Администрация \U0001F5C4":
                     var AdminKeyboard = new InlineKeyboardMarkup(new[]{
                         new []
                         {
@@ -294,6 +293,11 @@ namespace QA_KFU_TelegramBot
                         }
                     });
                     await bot.SendTextMessageAsync(message.From.Id, $"Информация об ИВМИИТ:", replyMarkup: AdminKeyboard);
+                    break;
+                case "/MessageToEveryone":
+
+
+
                     break;
             }
 
