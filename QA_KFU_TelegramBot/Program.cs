@@ -26,6 +26,7 @@ namespace QA_KFU_TelegramBot
 
             bot.OnMessage += BotOnMessageRecieved;
             bot.OnCallbackQuery += BotOnCallbackQueryRecieved;
+            bot.OnCallbackQuery += MenuCallBackQuerry;
 
             var me = bot.GetMeAsync().Result;
 
@@ -55,7 +56,21 @@ namespace QA_KFU_TelegramBot
 
 
 
+        private static async void MenuCallBackQuerry(object sender, CallbackQueryEventArgs e)
+        {
+            var message = e.CallbackQuery.Message;
+            if (e.CallbackQuery.Data == "ab")
+            {
+                string mmess = " Данный бот помогает абитуриенту разобраться с вопросами," +
+                " которые могут возникнуть при поступлении. А также" +
+                " поможет студентам в поиске нужной информации";
+                await bot.SendTextMessageAsync(e.CallbackQuery.From.Id, mmess);
+            }
+            else
+            {
 
+            }
+        }
         private static async void BotOnMessageRecieved(object sender, MessageEventArgs e)
         {
             var message = e.Message;
@@ -201,22 +216,22 @@ namespace QA_KFU_TelegramBot
             }
 
 
-            bot.OnCallbackQuery += (object sender, CallbackQueryEventArgs e) =>
-            {
-                var message = e.CallbackQuery.Message;
-                if (e.CallbackQuery.Data == "ab")
-                {
-                    string mmess = " Данный бот помогает абитуриенту разобраться с вопросами," +
-                    " которые могут возникнуть при поступлении. А также" +
-                    " поможет студентам в поиске нужной информации";
-                     bot.SendTextMessageAsync(message.From.Id, mmess);
-                }
-                else
-                {
+            //bot.OnCallbackQuery += (object sender, CallbackQueryEventArgs e) =>
+            //{
+            //    //var message = e.CallbackQuery.Message;
+            //    //if (e.CallbackQuery.Data == "ab")
+            //    //{
+            //    //    string mmess = " Данный бот помогает абитуриенту разобраться с вопросами," +
+            //    //    " которые могут возникнуть при поступлении. А также" +
+            //    //    " поможет студентам в поиске нужной информации";
+            //    //     bot.SendTextMessageAsync(message.From.Id, mmess);
+            //    //}
+            //    //else
+            //    //{
 
-                }
+            //    //}
 
-            };
+            //};
         }
     }
 }
