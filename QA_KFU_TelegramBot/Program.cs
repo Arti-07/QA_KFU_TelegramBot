@@ -6,6 +6,11 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Types.InputFiles;
+using System.Collections.Generic;
+using System.Runtime.Serialization.Json;
+using System.IO;
+using System.Collections;
+using Newtonsoft.Json;
 
 namespace QA_KFU_TelegramBot
 {
@@ -15,13 +20,13 @@ namespace QA_KFU_TelegramBot
         static bool IsButton = false;
         static bool IsChange = false;
         static TelegramBotClient bot;
-
         static void Main(string[] args)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             //Console.WriteLine("Введи токен : ");
             //TOKEN = Convert.ToString(Console.ReadLine());
-            TOKEN= "1879411043:AAFmjjG_6iThq-Ugh2nWGpCIgQJm9ReRdz8";
+            
+            TOKEN = "1879411043:AAFmjjG_6iThq-Ugh2nWGpCIgQJm9ReRdz8";
             bot = new TelegramBotClient(TOKEN);                    // Подключили бота
 
             bot.OnMessage += BotOnMessageRecieved;
@@ -29,22 +34,29 @@ namespace QA_KFU_TelegramBot
             bot.OnCallbackQuery += MenuCallBackQuerry;
 
             var me = bot.GetMeAsync().Result;
-
             Console.WriteLine(me.FirstName);
             bot.StartReceiving();                          // Open stream 
             Console.ReadKey();
             bot.StopReceiving();                          // Close stream
 
-
-
-
-
-
-
-
+        }
+        private void ReadData()
+        {
+            string response;
+            using (StreamReader stream = new StreamReader("DataUsers.json"))
+            {
+                while (!String.IsNullOrEmpty(response = stream.ReadLine()))
+                {
+                    Users Response = JsonConvert.DeserializeObject<Users>(response);
+                    uSers.Add(Response);
+                    foreach(var usr in uSers)
+                    {
+                        ID.Add(usr.ID);
+                    }
+                }
+            }
 
         }
-
         private static void BotOnCallbackQueryRecieved(object sender, CallbackQueryEventArgs e)
         {
             string buttonText = e.CallbackQuery.Data;
@@ -52,8 +64,8 @@ namespace QA_KFU_TelegramBot
             Console.WriteLine($"{name} press a key {buttonText}");
         }
 
-
-
+        List<Users> uSers = new List<Users>();
+        List<int> ID = new List<int>();
 
 
         private static async void MenuCallBackQuerry(object sender, CallbackQueryEventArgs e)
@@ -81,6 +93,12 @@ namespace QA_KFU_TelegramBot
             string name = $"{message.From.FirstName} {message.From.LastName}";
             Console.WriteLine(name + ": " + message.Text);
 
+            
+
+
+
+
+
 
             switch (message.Text)     // Команды для бота
             {
@@ -92,8 +110,19 @@ namespace QA_KFU_TelegramBot
                         "\n \U0001F527 Спасибо, что подключили бота! \U0001F527" +
                         "\n " +
                         "\n \U0001F381 Лови кнопочки! \U0001F381";
+                    Users user = new Users(message.From.FirstName, message.From.Id);
 
+                    //var jsonFormater = new DataContractJsonSerializer(typeof(List<Users>));
+                    //using (var file = new FileStream("Users.json", FileMode.Append))
+                    //{
+                    //    jsonFormater.WriteObject(file, user);
+                    //}
 
+                    var json = JsonConvert.SerializeObject(user);
+                    using (StreamWriter stream = new StreamWriter("DataUsers.json", true))
+                    {
+                        stream.WriteLine(json);
+                    }
 
 
                     ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup
@@ -102,23 +131,23 @@ namespace QA_KFU_TelegramBot
                         {
                             new[]
                             {
-                                new KeyboardButton("\U0001F4C3 FAQ \U0001F4C3"),
+                                new KeyboardButton("\U0001F4CB FAQ \U0001F4AC"),
                                 new KeyboardButton("Справка")
                             },
                             new []
                             {
-                                new KeyboardButton("Календарь событий"),
+                                new KeyboardButton("\U0001F4C5 Календарь событий \U0001F4C5"),
                                 new KeyboardButton("Если не нашёл(а) свой вопрос в FAQ")
                             },
                             new[]
                             {
-                                new KeyboardButton("Кафедры")
+                                new KeyboardButton("\U0001F4BB Кафедры \U0001F393")
                             },
                         }
                     };
                     await bot.SendTextMessageAsync(message.From.Id, text, ParseMode.Html, false, false, 0, keyboard);
                     break;
-                case "\U0001F4C3 FAQ \U0001F4C3":
+                case "\U0001F4CB FAQ \U0001F4AC":
                     var inlineKeyboard = new InlineKeyboardMarkup(new[]
                     {
                         new []
@@ -173,7 +202,7 @@ namespace QA_KFU_TelegramBot
                     await bot.SendTextMessageAsync(message.From.Id, $"Выберите пункт 'Справки' {1F} :", replyMarkup: Keyboard_Note);
                     break;
 
-                case "Календарь событий":
+                case "\U0001F4C5 Календарь событий \U0001F4C5":
                     string mes = "Ой, пока запланированных событий нет \U0001F61E";
                     await bot.SendTextMessageAsync(message.From.Id, mes, ParseMode.Html, false, false, 0);
                     break;
