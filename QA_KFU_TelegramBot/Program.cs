@@ -94,7 +94,11 @@ namespace QA_KFU_TelegramBot
                             {
                                 new KeyboardButton("Календарь событий"),
                                 new KeyboardButton("Если не нашёл(а) свой вопрос в FAQ")
-                            }
+                            },
+                            new[]
+                            {
+                                new KeyboardButton("Кафедры")
+                            },
                         }
                     };
                     await bot.SendTextMessageAsync(message.From.Id, text, ParseMode.Html, false, false, 0, keyboard);
@@ -159,6 +163,41 @@ namespace QA_KFU_TelegramBot
                     await bot.SendTextMessageAsync(message.From.Id, mes, ParseMode.Html, false, false, 0);
                     break;
 
+
+                case "Кафедры":
+                    var Keyboard_Department = new InlineKeyboardMarkup(new[]{
+                        new []
+                        {
+                           InlineKeyboardButton.WithUrl("Кафедра прикладной математики","https://kpfu.ru/computing-technology/struktura/kafedry/kafedra-prikladnoj-matematiki"),
+                        },
+                        new[]
+                        {
+                                InlineKeyboardButton.WithUrl("Кафедра вычислительной математики","https://kpfu.ru/computing-technology/struktura/kafedry/kafedra-vychislitelnoj-matematiki"),
+                        },
+                        new []
+                        {
+                            InlineKeyboardButton.WithUrl("Кафедра теоретической кибернетики","https://kpfu.ru/computing-technology/struktura/kafedry/kafedra-teoreticheskoj-kibernetiki")
+                        },
+                        new []
+                        {
+                           InlineKeyboardButton.WithUrl("Кафедра анализа данных и исследования операций","https://kpfu.ru/computing-technology/struktura/kafedry/kafedra-analiza-dannyh-i-issledovaniya-operacij")
+                        },
+                        new []
+                        {
+                            InlineKeyboardButton.WithUrl("Кафедра технологий программирования","https://kpfu.ru/computing-technology/struktura/kafedry/kafedra-tehnologij-programmirovaniya")
+                        },
+                        new []
+                        {
+                           InlineKeyboardButton.WithUrl("Кафедра системного анализа и информационных технологий","https://kpfu.ru/computing-technology/struktura/kafedry/kafedra-sistemnogo-analiza-i-informacionnyh")
+                        },
+                        new []
+                        {
+                            InlineKeyboardButton.WithUrl("Кафедра информационных систем","https://kpfu.ru/computing-technology/struktura/kafedry/kafedra-informacionnyh-sistem")
+                        },
+                        
+                    });
+                    await bot.SendTextMessageAsync(message.From.Id, $"Выберите пункт 'Кафедра' {1F} :", replyMarkup: Keyboard_Department);
+                    break;
             }
 
 
