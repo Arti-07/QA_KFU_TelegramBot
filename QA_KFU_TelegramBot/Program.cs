@@ -17,8 +17,8 @@ namespace QA_KFU_TelegramBot
     class Program
     {
         static string TOKEN;   //   1879411043:AAFmjjG_6iThq-Ugh2nWGpCIgQJm9ReRdz8
-        static bool IsButton = false;
-        static bool IsChange = false;
+        //static bool IsButton = false;
+        //static bool IsChange = false;
         static TelegramBotClient bot;
         static void Main(string[] args)
         {
@@ -32,7 +32,7 @@ namespace QA_KFU_TelegramBot
             bot.OnMessage += BotOnMessageRecieved;
             bot.OnCallbackQuery += BotOnCallbackQueryRecieved;
             bot.OnCallbackQuery += MenuCallBackQuerry;
-
+            //SendMessage();
             var me = bot.GetMeAsync().Result;
             Console.WriteLine(me.FirstName);
             bot.StartReceiving();                          // Open stream 
@@ -66,6 +66,10 @@ namespace QA_KFU_TelegramBot
 
         List<Users> uSers = new List<Users>();
         List<int> ID = new List<int>();
+        private static void SendMessage()
+        {
+            bot.SendTextMessageAsync(363450022, "Hello WORLd");
+        }
 
 
         private static async void MenuCallBackQuerry(object sender, CallbackQueryEventArgs e)
@@ -78,11 +82,41 @@ namespace QA_KFU_TelegramBot
                 " поможет студентам в поиске нужной информации";
                 await bot.SendTextMessageAsync(e.CallbackQuery.From.Id, mmess);
             }
-            else
+            else if(e.CallbackQuery.Data == "AdminDir")
             {
-
+                string a = "Директор института: Чикрин Дмитрий Евгеньевич.\n\n" +
+                    "Адрес: Адрес: 420008, г. Казань, ул. Кремлевская, 35, каб.1004\n" +
+                    "Телефон: (843) 233-70-37\n" +
+                    "Email: dmitry.kfu@gmail.com";
+                //await bot.SendTextMessageAsync(e.CallbackQuery.From.Id, a);
+                await bot.SendPhotoAsync(e.CallbackQuery.From.Id, "https://kpfu.ru/docs/F16347701418/img8152402.jpg", a);
+                a = "Заместитель директора по цифровизации: Егорчев Антон Александрович.\n\n" +
+                   "Адрес: Адрес: 420008, г. Казань, ул. Кремлевская, 35, каб.1004\n" +
+                   "Телефон: (843) 233-70-37\n" +
+                   "Email: anton.egorchev.kfu@gmail.com";
+                //await bot.SendTextMessageAsync(e.CallbackQuery.From.Id, a);
+                await bot.SendPhotoAsync(e.CallbackQuery.From.Id, "https://kpfu.ru/docs/F21520534037/img703043329.jpg", a);
+                a = "Заместитель директора по научной деятельности: Тумаков Дмитрий Николаевич.\n\n" +
+                   "Адрес: Адрес: 420008, г. Казань, ул. Кремлевская, 35, каб.1202\n" +
+                   "Телефон: (843) 233-70-35\n" +
+                   "Email: dtumakov@kpfu.ru";
+                //await bot.SendTextMessageAsync(e.CallbackQuery.From.Id, a);
+                await bot.SendPhotoAsync(e.CallbackQuery.From.Id, "https://shelly.kpfu.ru/e-ksu/docs/F353093089/IMAG0084_1.jpg?rnd=6943", a);
+                a = "Заместитель директора по образовательной деятельности: Панкратова Ольга Владиславна.\n\n" +
+                   "Адрес: Адрес: 420008, г. Казань, ул. Кремлевская, 35, каб.1002\n" +
+                   "Телефон: (843) 233-71-55\n" +
+                   "Email: olga_pankratova@rambler.ru";
+                //await bot.SendTextMessageAsync(e.CallbackQuery.From.Id, a);
+                await bot.SendPhotoAsync(e.CallbackQuery.From.Id, "http://shelly.kpfu.ru/e-ksu/docs/F55574275/m__74_.jpg?rnd=787", a);
+                a = "Заместитель директора по воспитательной и социальной работе и связям с общественностью: Новенькова Аида Зуфаровна.\n\n" +
+   "Адрес: Адрес: 420008, г. Казань, ул. Кремлевская, 35, каб.1001\n" +
+   "Телефон: (843) 233-77-74\n" +
+   "Email: followaida@gmail.com";
+                //await bot.SendTextMessageAsync(e.CallbackQuery.From.Id, a);
+                await bot.SendPhotoAsync(e.CallbackQuery.From.Id, "https://kpfu.ru/portal/docs/F1491305294/Novenkova.jpg", a);
             }
         }
+        
         private static async void BotOnMessageRecieved(object sender, MessageEventArgs e)
         {
             var message = e.Message;
@@ -142,6 +176,8 @@ namespace QA_KFU_TelegramBot
                             new[]
                             {
                                 new KeyboardButton("\U0001F4BB Кафедры \U0001F393")
+                                new KeyboardButton("Кафедры"),
+                                new KeyboardButton("Администрация")
                             },
                         }
                     };
@@ -241,6 +277,23 @@ namespace QA_KFU_TelegramBot
                         
                     });
                     await bot.SendTextMessageAsync(message.From.Id, $"Выберите пункт 'Кафедра' {1F} :", replyMarkup: Keyboard_Department);
+                    break;
+                case "Администрация":
+                    var AdminKeyboard = new InlineKeyboardMarkup(new[]{
+                        new []
+                        {
+                           InlineKeyboardButton.WithCallbackData("Директорат","AdminDir")
+                        },
+                        new[]
+                        {
+                            InlineKeyboardButton.WithUrl("Ученый совет","https://kpfu.ru/computing-technology/struktura/uchenyj-sovet")
+                        },
+                        new[]
+                        {
+                            InlineKeyboardButton.WithUrl("Сотрудники","https://kpfu.ru/computing-technology/sotrudniki")
+                        }
+                    });
+                    await bot.SendTextMessageAsync(message.From.Id, $"Информация об ИВМИИТ:", replyMarkup: AdminKeyboard);
                     break;
             }
 
