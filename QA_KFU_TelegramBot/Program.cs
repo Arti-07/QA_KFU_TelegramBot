@@ -34,15 +34,6 @@ namespace QA_KFU_TelegramBot
             bot.StartReceiving();                          // Open stream 
             Console.ReadKey();
             bot.StopReceiving();                          // Close stream
-
-
-
-
-
-
-
-
-
         }
 
         private static void BotOnCallbackQueryRecieved(object sender, CallbackQueryEventArgs e)
