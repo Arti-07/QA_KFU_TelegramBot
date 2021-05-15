@@ -63,9 +63,6 @@ namespace QA_KFU_TelegramBot
             string name = $"{e.CallbackQuery.From.FirstName} {e.CallbackQuery.From.LastName}";
             Console.WriteLine($"{name} press a key {buttonText}");
         }
-
-        List<Users> uSers = new List<Users>();
-        List<int> ID = new List<int>();
         private static void SendMessage()
         {
             bot.SendTextMessageAsync(363450022, "Hello WORLd");
@@ -132,29 +129,36 @@ namespace QA_KFU_TelegramBot
             string name = $"{message.From.FirstName} {message.From.LastName}";
             Console.WriteLine(name + ": " + message.Text);
 
-            Program p = new Program();
+            //Program p = new Program();
 
             
             if(IsButton)
             {
-
-                string response;
-                using (StreamReader stream = new StreamReader("DataUsers.json"))
+                if (message.From.Id == 363450022 || message.From.Id == 806879827 || message.From.Id == 250899062)
                 {
-                    while (!String.IsNullOrEmpty(response = stream.ReadLine()))
+                    //List<Users> uSers = new List<Users>();
+                    List<int> ID = new List<int>();
+                    string response;
+                    using (StreamReader stream = new StreamReader("DataUsers.json"))
                     {
-                        Users Response = JsonConvert.DeserializeObject<Users>(response);
-                        p.uSers.Add(Response);
-                        foreach (var usr in p.uSers)
+                        while (!String.IsNullOrEmpty(response = stream.ReadLine()))
                         {
-                            p.ID.Add(usr.ID);
+                            Users Response = JsonConvert.DeserializeObject<Users>(response);
+
+                            //uSers.Add(Response);
+                            ID.Add(Response.ID);
+                            //foreach (var usr in uSers)
+                            //{
+                            //    ID.Add(usr.ID);
+                            //}
                         }
                     }
-                }
-                foreach (var usr in p.ID)
-                {
-                    //string t = e.Message;
-                    await bot.SendTextMessageAsync(usr, message.Text, ParseMode.Html, false, false, 0);
+                    foreach (var usr in ID)
+                    {
+                        //string t = e.Message;
+                        await bot.SendTextMessageAsync(usr, message.Text, ParseMode.Html, false, false, 0);
+                    }
+                    IsButton = false;
                 }
             }
 
@@ -187,6 +191,7 @@ namespace QA_KFU_TelegramBot
                         "\n \U0001F527 Спасибо, что подключили бота! \U0001F527" +
                         "\n " +
                         "\n \U0001F381 Лови кнопочки! \U0001F381";
+                    //ПРОВЕРИТЬ НА НАЛИЧИЕ ЮЗЕРА В ДЖСОН
                     Users user = new Users(message.From.FirstName, message.From.Id);
 
                     //var jsonFormater = new DataContractJsonSerializer(typeof(List<Users>));
