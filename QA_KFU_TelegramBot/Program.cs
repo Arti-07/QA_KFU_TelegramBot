@@ -116,6 +116,55 @@ namespace QA_KFU_TelegramBot
                 string filePath = @"Documents/MatHelp.pdf";
                 using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
                 await bot.SendDocumentAsync(e.CallbackQuery.From.Id, new InputOnlineFile(fileStream, filePath), "Документ на мат. помощь");
+            } else if(e.CallbackQuery.Data == "documents")
+            {
+                var documentsKeyboard = new InlineKeyboardMarkup(new[]
+                        {
+                        new []
+                        {
+                            InlineKeyboardButton.WithCallbackData("Материальная помощь","mathelp"),
+                            InlineKeyboardButton.WithCallbackData("Социальное питание","socialfood")
+                        },
+                        new []
+                        {
+                            InlineKeyboardButton.WithCallbackData("Заселение в ДУ","liveindu"),
+                            InlineKeyboardButton.WithCallbackData("Устройство двойки", "two")
+                        }
+                        });
+                await bot.SendTextMessageAsync(e.CallbackQuery.From.Id, $"Выбери документ, который тебе нужен : ", replyMarkup: documentsKeyboard);
+            }else if (e.CallbackQuery.Data == "socialfood")
+            {
+                string filePath = @"Documents/1. Заявление на питание.pdf";
+                using var fileStream0 = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                await bot.SendDocumentAsync(e.CallbackQuery.From.Id, new InputOnlineFile(fileStream0, filePath), "1. Заявление на питание");
+                filePath = @"Documents/2. Заявление-распоряжение.pdf";
+                using var fileStream1 = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                await bot.SendDocumentAsync(e.CallbackQuery.From.Id, new InputOnlineFile(fileStream1, filePath), "2.Заявление - распоряжение");
+                filePath = @"Documents/3. Договор текущего счета.pdf";
+                using var fileStream2 = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                await bot.SendDocumentAsync(e.CallbackQuery.From.Id, new InputOnlineFile(fileStream2, filePath), "3. Договор текущего счета");
+                filePath = @"Documents/4. Анкета.pdf";
+                using var fileStream3 = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                await bot.SendDocumentAsync(e.CallbackQuery.From.Id, new InputOnlineFile(fileStream3, filePath), "4. Анкета");
+                filePath = @"Documents/5. Опрос-анкета.pdf";
+                using var fileStream4 = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                await bot.SendDocumentAsync(e.CallbackQuery.From.Id, new InputOnlineFile(fileStream4, filePath), "5. Опрос-анкета");
+                filePath = @"Documents/6. Согласие на обработку.pdf";
+                using var fileStream5 = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                await bot.SendDocumentAsync(e.CallbackQuery.From.Id, new InputOnlineFile(fileStream5, filePath), "6. Согласие на обработку");
+                await bot.SendTextMessageAsync(e.CallbackQuery.From.Id, "Для получения социальнного питания тебе нужно заполнить данные документы в соотвествии с образцом ниже");
+                filePath = @"Documents/Образец заполнения.pdf";
+                using var fileStream6 = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                await bot.SendDocumentAsync(e.CallbackQuery.From.Id, new InputOnlineFile(fileStream6, filePath), "Образец заполнения");
+
+            } else if(e.CallbackQuery.Data == "whereEat")
+            {
+
+            } else if(e.CallbackQuery.Data == "liveindu")
+            {
+                string filePath = @"Documents/Пакет документов для заселения в ДУ.docx";
+                using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                await bot.SendDocumentAsync(e.CallbackQuery.From.Id, new InputOnlineFile(fileStream, filePath), "Тут ты можешь найти документы, которые тебе потребуются для заселения");
             }
         }
         
@@ -162,23 +211,23 @@ namespace QA_KFU_TelegramBot
                 }
             }
 
-            if(e.Message.Text =="Документы")
-            {
-                var documentsKeyboard = new InlineKeyboardMarkup(new[]
-                        {
-                        new []
-                        {
-                            InlineKeyboardButton.WithCallbackData("Материальная помощь","mathelp"),
-                            InlineKeyboardButton.WithCallbackData("Как добраться ?","howToGetThere")
-                        },
-                        new []
-                        {
-                            InlineKeyboardButton.WithCallbackData("Студенческий совет","studentSov"),
-                            InlineKeyboardButton.WithCallbackData("Устройство двойки", "two")
-                        }
-                        });
-                await bot.SendTextMessageAsync(message.From.Id, $"Выбери документ, который тебе нужен : ", replyMarkup: documentsKeyboard);
-            }
+            //if(e.Message.Text =="Документы")
+            //{
+            //    var documentsKeyboard = new InlineKeyboardMarkup(new[]
+            //            {
+            //            new []
+            //            {
+            //                InlineKeyboardButton.WithCallbackData("Материальная помощь","mathelp"),
+            //                InlineKeyboardButton.WithCallbackData("Как добраться ?","howToGetThere")
+            //            },
+            //            new []
+            //            {
+            //                InlineKeyboardButton.WithCallbackData("Студенческий совет","studentSov"),
+            //                InlineKeyboardButton.WithCallbackData("Устройство двойки", "two")
+            //            }
+            //            });
+            //    await bot.SendTextMessageAsync(message.From.Id, $"Выбери документ, который тебе нужен : ", replyMarkup: documentsKeyboard);
+            //}
 
 
             switch (message.Text)     // Команды для бота
@@ -347,49 +396,9 @@ namespace QA_KFU_TelegramBot
                         "Напиши сообщение, которое мы отправим всем!";
                         IsButton = true;
                     await bot.SendTextMessageAsync(message.From.Id, m, ParseMode.Html, false, false, 0);
-
-
-                    //var adminMes = e.Message.Text;
-
-                    
-                    //    string response;
-                    //using (StreamReader stream = new StreamReader("DataUsers.json"))
-                    //{
-                    //    while (!String.IsNullOrEmpty(response = stream.ReadLine()))
-                    //    {
-                    //        Users Response = JsonConvert.DeserializeObject<Users>(response);
-                    //        p.uSers.Add(Response);
-                    //        foreach (var usr in p.uSers)
-                    //        {
-                    //            p.ID.Add(usr.ID);
-                    //        }
-                    //    }
-                    //}
-                    //    foreach (var usr in p.ID)
-                    //{
-                    //    await bot.SendTextMessageAsync(usr, adminMes, ParseMode.Html, false, false, 0);
-                    //}
                     break;
                 
             }
-            
-
-            //bot.OnCallbackQuery += (object sender, CallbackQueryEventArgs e) =>
-            //{
-            //    //var message = e.CallbackQuery.Message;
-            //    //if (e.CallbackQuery.Data == "ab")
-            //    //{
-            //    //    string mmess = " Данный бот помогает абитуриенту разобраться с вопросами," +
-            //    //    " которые могут возникнуть при поступлении. А также" +
-            //    //    " поможет студентам в поиске нужной информации";
-            //    //     bot.SendTextMessageAsync(message.From.Id, mmess);
-            //    //}
-            //    //else
-            //    //{
-
-            //    //}
-
-            //};
         }
     }
 }
