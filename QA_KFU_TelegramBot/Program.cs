@@ -7,22 +7,21 @@ using Telegram.Bot.Types.InputFiles;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace QA_KFU_TelegramBot
 {
     class Program
     {
-        static string TOKEN;   //   1879411043:AAFmjjG_6iThq-Ugh2nWGpCIgQJm9ReRdz8
+        static string TOKEN;
         static bool IsButton = false;
         static bool isQuestion = false;
         static TelegramBotClient bot;
         static void Main(string[] args)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            //Console.WriteLine("Введи токен : ");
-            //TOKEN = Convert.ToString(Console.ReadLine());
-            
-            TOKEN = "1879411043:AAFmjjG_6iThq-Ugh2nWGpCIgQJm9ReRdz8";
+            string tok = File.ReadAllText("Token.txt");
+            TOKEN = (String)tok;   
             bot = new TelegramBotClient(TOKEN);                    // Подключили бота
 
             bot.OnMessage += BotOnMessageRecieved;
@@ -386,7 +385,7 @@ namespace QA_KFU_TelegramBot
 
                 case "Если не нашёл(а) свой вопрос в FAQ":
                     string q = "Жаль, что ты не смог(а) найти ответ" +
-                        "на свой вопрос в разделе FAQ. \U0001F61E" +
+                        "на свой вопрос в разделе FAQ.  \U0001F61E" +
                         "Напиши вопрос, который ты хочешь задать Админу : ";
                     isQuestion = true;
                     await bot.SendTextMessageAsync(message.From.Id, q, ParseMode.Html, false, false, 0);
