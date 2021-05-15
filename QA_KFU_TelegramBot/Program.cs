@@ -7,7 +7,6 @@ using Telegram.Bot.Types.InputFiles;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
-using System.Text;
 
 namespace QA_KFU_TelegramBot
 {
@@ -390,6 +389,8 @@ namespace QA_KFU_TelegramBot
                     isQuestion = true;
                     await bot.SendTextMessageAsync(message.From.Id, q, ParseMode.Html, false, false, 0);
                     break;
+
+                    
             }
         }
     }
