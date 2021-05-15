@@ -210,26 +210,6 @@ namespace QA_KFU_TelegramBot
                     IsButton = false;
                 }
             }
-
-            //if(e.Message.Text =="Документы")
-            //{
-            //    var documentsKeyboard = new InlineKeyboardMarkup(new[]
-            //            {
-            //            new []
-            //            {
-            //                InlineKeyboardButton.WithCallbackData("Материальная помощь","mathelp"),
-            //                InlineKeyboardButton.WithCallbackData("Как добраться ?","howToGetThere")
-            //            },
-            //            new []
-            //            {
-            //                InlineKeyboardButton.WithCallbackData("Студенческий совет","studentSov"),
-            //                InlineKeyboardButton.WithCallbackData("Устройство двойки", "two")
-            //            }
-            //            });
-            //    await bot.SendTextMessageAsync(message.From.Id, $"Выбери документ, который тебе нужен : ", replyMarkup: documentsKeyboard);
-            //}
-
-
             switch (message.Text)     // Команды для бота
             {
                 case "/start":
