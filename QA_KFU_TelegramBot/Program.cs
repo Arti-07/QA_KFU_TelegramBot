@@ -1,32 +1,27 @@
 ﻿using System;
 using Telegram.Bot;
-using Telegram;
 using Telegram.Bot.Args;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Types.InputFiles;
 using System.Collections.Generic;
-using System.Runtime.Serialization.Json;
 using System.IO;
-using System.Collections;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace QA_KFU_TelegramBot
 {
     class Program
     {
-        static string TOKEN;   //   1879411043:AAFmjjG_6iThq-Ugh2nWGpCIgQJm9ReRdz8
+        static string TOKEN;
         static bool IsButton = false;
-        //static bool IsChange = false;
+        static bool isQuestion = false;
         static TelegramBotClient bot;
         static void Main(string[] args)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            //Console.WriteLine("Введи токен : ");
-            //TOKEN = Convert.ToString(Console.ReadLine());
-            
-            TOKEN = "1879411043:AAFmjjG_6iThq-Ugh2nWGpCIgQJm9ReRdz8";
+            string tok = File.ReadAllText("Token.txt");
+            TOKEN = (String)tok;   
             bot = new TelegramBotClient(TOKEN);                    // Подключили бота
 
             bot.OnMessage += BotOnMessageRecieved;
@@ -40,23 +35,7 @@ namespace QA_KFU_TelegramBot
             bot.StopReceiving();                          // Close stream
             
         }
-       //private void ReadData()
-       // {
-       //     string response;
-       //     using (StreamReader stream = new StreamReader("DataUsers.json"))
-       //     {
-       //         while (!String.IsNullOrEmpty(response = stream.ReadLine()))
-       //         {
-       //             Users Response = JsonConvert.DeserializeObject<Users>(response);
-       //             uSers.Add(Response);
-       //             foreach(var usr in uSers)
-       //             {
-       //                 ID.Add(usr.ID);
-       //             }
-       //         }
-       //     }
-
-       // }
+       
         private static void BotOnCallbackQueryRecieved(object sender, CallbackQueryEventArgs e)
         {
             string buttonText = e.CallbackQuery.Data;
@@ -167,7 +146,7 @@ namespace QA_KFU_TelegramBot
                 await bot.SendDocumentAsync(e.CallbackQuery.From.Id, new InputOnlineFile(fileStream, filePath), "Тут ты можешь найти документы, которые тебе потребуются для заселения");
             }
         }
-        
+
         private static async void BotOnMessageRecieved(object sender, MessageEventArgs e)
         {
             var message = e.Message;
@@ -180,12 +159,11 @@ namespace QA_KFU_TelegramBot
 
             //Program p = new Program();
 
-            
-            if(IsButton)
+
+            if (IsButton)
             {
                 if (message.From.Id == 363450022 || message.From.Id == 806879827 || message.From.Id == 250899062)
                 {
-                    //List<Users> uSers = new List<Users>();
                     List<int> ID = new List<int>();
                     string response;
                     using (StreamReader stream = new StreamReader("DataUsers.json"))
@@ -196,10 +174,6 @@ namespace QA_KFU_TelegramBot
 
                             //uSers.Add(Response);
                             ID.Add(Response.ID);
-                            //foreach (var usr in uSers)
-                            //{
-                            //    ID.Add(usr.ID);
-                            //}
                         }
                     }
                     foreach (var usr in ID)
@@ -210,43 +184,59 @@ namespace QA_KFU_TelegramBot
                     IsButton = false;
                 }
             }
+
+            if (isQuestion)
+            {
+                int[] Admins = new int[3];
+                Admins[0] = 363450022;
+                Admins[1] = 806879827;
+                Admins[2] = 250899062;
+                for (int i = 0; i < Admins.GetLength(0); i++)
+                {
+                    await bot.SendTextMessageAsync(Admins[i], $"" +
+                        $" \n Вопрос : {message.Text} " +
+                        $" \n id: {message.From.Id}" +
+                        $" \n Username: {message.From.Username}" +
+                        $" \n Имя: {message.From.FirstName}" +
+                        $" \n Время(UTC): {message.Date.TimeOfDay}" +
+                        $" \n Дата: {message.Date} ", ParseMode.Html, false, false, 0);
+                }
+                isQuestion = false;
+            }
+
+
             switch (message.Text)     // Команды для бота
             {
                 case "/start":
+
+                    List<int> ID = new List<int>();
+                    string response;
+                    using (StreamReader stream = new StreamReader("DataUsers.json"))
+                    {
+                        while (!String.IsNullOrEmpty(response = stream.ReadLine()))
+                        {
+                            Users Response = JsonConvert.DeserializeObject<Users>(response);
+                            ID.Add(Response.ID);
+                        }
+                    }
                     var sticker = new InputOnlineFile("CAACAgIAAxkBAALwi2BE04ZTyadk2ufx3khKlil1K7RjAAJ0AAM7YCQUs8te1W3kR_QeBA");
                     await bot.SendStickerAsync(message.Chat.Id, sticker);
-                    string text = "\U0001F525Добро пожаловать! \U0001F525" +
+                    string text = "\U0001F525 Добро пожаловать! \U0001F525" +
                         "\n" +
                         "\n \U0001F527 Спасибо, что подключили бота! \U0001F527" +
                         "\n " +
                         "\n \U0001F381 Лови кнопочки! \U0001F381";
-                    //ПРОВЕРИТЬ НА НАЛИЧИЕ ЮЗЕРА В ДЖСОН
-                    Users user = new Users(message.From.FirstName, message.From.Id);
-
-                    //var jsonFormater = new DataContractJsonSerializer(typeof(List<Users>));
-                    //using (var file = new FileStream("Users.json", FileMode.Append))
-                    //{
-                    //    jsonFormater.WriteObject(file, user);
-                    //}
-
-                    var json = JsonConvert.SerializeObject(user);
-                    using (StreamWriter stream = new StreamWriter("DataUsers.json", true))
-                    {
-                        stream.WriteLine(json);
-                    }
-
-
                     ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup
                     {
                         Keyboard = new[]
-                        {
+                           {
                             new[]
                             {
                                 new KeyboardButton("\U0001F4CB FAQ \U0001F4AC"),
                                 new KeyboardButton(" Календарь событий \U0001F4C5 ")
                             },
                             new []
-                            {
+                                {
                                 new KeyboardButton("\U0001F4BB Кафедры \U0001F393"),
                                 new KeyboardButton("Администрация \U0001F5C4")
                             },
@@ -258,7 +248,22 @@ namespace QA_KFU_TelegramBot
                         }
                     };
                     await bot.SendTextMessageAsync(message.From.Id, text, ParseMode.Html, false, false, 0, keyboard);
+
+                    if (!ID.Contains(message.From.Id))
+                    {
+                        Users user = new Users(message.From.FirstName, message.From.Id);
+                        var json = JsonConvert.SerializeObject(user);
+                        using (StreamWriter stream = new StreamWriter("DataUsers.json", true))
+                        {
+                            stream.WriteLine(json);
+                        }
+                    }
+                    else
+                    {
+
+                    }
                     break;
+                    
                 case "\U0001F4CB FAQ \U0001F4AC":
                     var inlineKeyboard = new InlineKeyboardMarkup(new[]
                     {
@@ -377,7 +382,14 @@ namespace QA_KFU_TelegramBot
                         IsButton = true;
                     await bot.SendTextMessageAsync(message.From.Id, m, ParseMode.Html, false, false, 0);
                     break;
-                
+
+                case "Если не нашёл(а) свой вопрос в FAQ":
+                    string q = "Жаль, что ты не смог(а) найти ответ" +
+                        "на свой вопрос в разделе FAQ.  \U0001F61E" +
+                        "Напиши вопрос, который ты хочешь задать Админу : ";
+                    isQuestion = true;
+                    await bot.SendTextMessageAsync(message.From.Id, q, ParseMode.Html, false, false, 0);
+                    break;
             }
         }
     }
