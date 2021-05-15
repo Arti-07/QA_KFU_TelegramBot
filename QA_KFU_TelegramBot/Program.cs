@@ -17,7 +17,7 @@ namespace QA_KFU_TelegramBot
     class Program
     {
         static string TOKEN;   //   1879411043:AAFmjjG_6iThq-Ugh2nWGpCIgQJm9ReRdz8
-        //static bool IsButton = false;
+        static bool IsButton = false;
         //static bool IsChange = false;
         static TelegramBotClient bot;
         static void Main(string[] args)
@@ -38,25 +38,25 @@ namespace QA_KFU_TelegramBot
             bot.StartReceiving();                          // Open stream 
             Console.ReadKey();
             bot.StopReceiving();                          // Close stream
-
+            
         }
-        private void ReadData()
-        {
-            string response;
-            using (StreamReader stream = new StreamReader("DataUsers.json"))
-            {
-                while (!String.IsNullOrEmpty(response = stream.ReadLine()))
-                {
-                    Users Response = JsonConvert.DeserializeObject<Users>(response);
-                    uSers.Add(Response);
-                    foreach(var usr in uSers)
-                    {
-                        ID.Add(usr.ID);
-                    }
-                }
-            }
+       //private void ReadData()
+       // {
+       //     string response;
+       //     using (StreamReader stream = new StreamReader("DataUsers.json"))
+       //     {
+       //         while (!String.IsNullOrEmpty(response = stream.ReadLine()))
+       //         {
+       //             Users Response = JsonConvert.DeserializeObject<Users>(response);
+       //             uSers.Add(Response);
+       //             foreach(var usr in uSers)
+       //             {
+       //                 ID.Add(usr.ID);
+       //             }
+       //         }
+       //     }
 
-        }
+       // }
         private static void BotOnCallbackQueryRecieved(object sender, CallbackQueryEventArgs e)
         {
             string buttonText = e.CallbackQuery.Data;
@@ -131,6 +131,32 @@ namespace QA_KFU_TelegramBot
             }
             string name = $"{message.From.FirstName} {message.From.LastName}";
             Console.WriteLine(name + ": " + message.Text);
+
+            Program p = new Program();
+
+            
+            if(IsButton)
+            {
+
+                string response;
+                using (StreamReader stream = new StreamReader("DataUsers.json"))
+                {
+                    while (!String.IsNullOrEmpty(response = stream.ReadLine()))
+                    {
+                        Users Response = JsonConvert.DeserializeObject<Users>(response);
+                        p.uSers.Add(Response);
+                        foreach (var usr in p.uSers)
+                        {
+                            p.ID.Add(usr.ID);
+                        }
+                    }
+                }
+                foreach (var usr in p.ID)
+                {
+                    //string t = e.Message;
+                    await bot.SendTextMessageAsync(usr, message.Text, ParseMode.Html, false, false, 0);
+                }
+            }
 
             if(e.Message.Text =="Документы")
             {
@@ -312,13 +338,36 @@ namespace QA_KFU_TelegramBot
                     await bot.SendTextMessageAsync(message.From.Id, $"Информация об ИВМИИТ:", replyMarkup: AdminKeyboard);
                     break;
                 case "/MessageToEveryone":
+                    string m = "Администратор, мы рады видеть тебя!" +
+                        "Напиши сообщение, которое мы отправим всем!";
+                        IsButton = true;
+                    await bot.SendTextMessageAsync(message.From.Id, m, ParseMode.Html, false, false, 0);
 
 
+                    //var adminMes = e.Message.Text;
 
+                    
+                    //    string response;
+                    //using (StreamReader stream = new StreamReader("DataUsers.json"))
+                    //{
+                    //    while (!String.IsNullOrEmpty(response = stream.ReadLine()))
+                    //    {
+                    //        Users Response = JsonConvert.DeserializeObject<Users>(response);
+                    //        p.uSers.Add(Response);
+                    //        foreach (var usr in p.uSers)
+                    //        {
+                    //            p.ID.Add(usr.ID);
+                    //        }
+                    //    }
+                    //}
+                    //    foreach (var usr in p.ID)
+                    //{
+                    //    await bot.SendTextMessageAsync(usr, adminMes, ParseMode.Html, false, false, 0);
+                    //}
                     break;
                 
             }
-
+            
 
             //bot.OnCallbackQuery += (object sender, CallbackQueryEventArgs e) =>
             //{

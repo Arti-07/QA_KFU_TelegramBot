@@ -7,14 +7,14 @@ using System.Runtime.Serialization;
 namespace QA_KFU_TelegramBot
 {
     [DataContract]
-    class Users
+     public class Users
     {
         [DataMember]
         public string Name { get; set; }
         [DataMember]
-        public int ID { get; set; }
+        public  int ID { get; set; }
        
-        public Users()
+        public  Users()
         {
 
         }
