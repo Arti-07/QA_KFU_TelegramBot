@@ -114,6 +114,11 @@ namespace QA_KFU_TelegramBot
    "Email: followaida@gmail.com";
                 //await bot.SendTextMessageAsync(e.CallbackQuery.From.Id, a);
                 await bot.SendPhotoAsync(e.CallbackQuery.From.Id, "https://kpfu.ru/portal/docs/F1491305294/Novenkova.jpg", a);
+            } else if(e.CallbackQuery.Data == "mathelp")
+            {
+                string filePath = @"Documents/MatHelp.pdf";
+                using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                await bot.SendDocumentAsync(e.CallbackQuery.From.Id, new InputOnlineFile(fileStream, filePath), "Документ на мат. помощь");
             }
         }
         
@@ -127,11 +132,23 @@ namespace QA_KFU_TelegramBot
             string name = $"{message.From.FirstName} {message.From.LastName}";
             Console.WriteLine(name + ": " + message.Text);
 
-            
-
-
-
-
+            if(e.Message.Text =="Документы")
+            {
+                var documentsKeyboard = new InlineKeyboardMarkup(new[]
+                        {
+                        new []
+                        {
+                            InlineKeyboardButton.WithCallbackData("Материальная помощь","mathelp"),
+                            InlineKeyboardButton.WithCallbackData("Как добраться ?","howToGetThere")
+                        },
+                        new []
+                        {
+                            InlineKeyboardButton.WithCallbackData("Студенческий совет","studentSov"),
+                            InlineKeyboardButton.WithCallbackData("Устройство двойки", "two")
+                        }
+                        });
+                await bot.SendTextMessageAsync(message.From.Id, $"Выбери документ, который тебе нужен : ", replyMarkup: documentsKeyboard);
+            }
 
 
             switch (message.Text)     // Команды для бота
@@ -299,6 +316,7 @@ namespace QA_KFU_TelegramBot
 
 
                     break;
+                
             }
 
 
